@@ -203,16 +203,7 @@
     <string name="battery_optimization_dialog_title">关闭电池优化</string>
     <string name="battery_optimization_dialog_message">为了让自动备份即使在设备休眠时也能准时执行，必须为本应用关闭电池优化。\n\n这不会明显影响设备的续航。</string>
 
-    <string name="file_share">文件管理</string>
-    <string name="file_share_running">服务运行中</string>
-    <string name="file_share_stopped">服务已停止</string>
-    <string name="file_share_stop_service">停止服务</string>
-    <string name="file_share_address">访问地址</string>
-    <string name="file_share_open_in_browser">在浏览器中打开</string>
-    <string name="file_share_copy_address">复制地址</string>
-    <string name="file_share_grant_storage">授予所有文件访问权限</string>
-    <string name="file_share_storage_granted">已获得所有文件访问权限</string>
-    <string name="file_share_storage_missing">未获得所有文件访问权限，只能浏览应用自己的目录</string>
-    <string name="file_share_start_failed">服务启动失败，换一个端口重试</string>
+    <string name="file_share">文件</string>
+    <string name="file_manager_missing">未找到系统文件管理应用</string>
 
 </resources>

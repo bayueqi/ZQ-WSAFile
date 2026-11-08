@@ -1,6 +1,9 @@
 package com.ryosoftware.apks_exporter
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -29,15 +32,10 @@ class MainActivity : AppCompatActivity() {
                         MainScreen(
                             viewModel = viewModel,
                             onNavigateToSettings = { navController.navigate("preferences") },
-                            onNavigateToFiles = { navController.navigate("files") },
+                            onNavigateToFiles = { openSystemFileManager() },
                             onNavigateToAppDetail = { packageName ->
                                 navController.navigate("app_detail/$packageName")
                             }
-                        )
-                    }
-                    composable("files") {
-                        FileServerScreen(
-                            onNavigateBack = { navController.popBackStack() }
                         )
                     }
                     composable("preferences") {
@@ -70,9 +68,36 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private fun openSystemFileManager() {
+        packageManager.getLaunchIntentForPackage(DOCUMENTS_UI)?.let {
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(it)
+            return
+        }
+        for (root in STORAGE_ROOTS) {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(Uri.parse(root), "vnd.android.document/root")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            }
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+                return
+            }
+        }
+        Toast.makeText(this, R.string.file_manager_missing, Toast.LENGTH_SHORT).show()
+    }
+
     override fun onResume() {
         super.onResume()
         viewModel.loadData()
         MainBackupWorker.onAppExecuted(this)
+    }
+
+    companion object {
+        private const val DOCUMENTS_UI = "com.android.documentsui"
+        private val STORAGE_ROOTS = arrayOf(
+            "content://com.android.externalstorage.documents/root/primary",
+            "content://com.android.externalstorage.documents/root/home"
+        )
     }
 }
