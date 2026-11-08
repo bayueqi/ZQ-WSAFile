@@ -1,5 +1,6 @@
 package com.ryosoftware.apks_exporter
 
+import android.content.ComponentName
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -34,8 +35,8 @@ class MainActivity : AppCompatActivity() {
                             viewModel = viewModel,
                             onNavigateToSettings = { navController.navigate("preferences") },
                             onNavigateToFiles = { openSystemFileManager() },
-                            onNavigateToAppInfo = { openSystemScreen(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS, Settings.ACTION_APPLICATION_SETTINGS) },
-                            onNavigateToSystemSettings = { openSystemScreen(Settings.ACTION_SETTINGS) },
+                            onNavigateToAppInfo = { openAndroidSettings(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS) },
+                            onNavigateToSystemSettings = { openAndroidSettings(Settings.ACTION_SETTINGS) },
                             onNavigateToAppDetail = { packageName ->
                                 navController.navigate("app_detail/$packageName")
                             }
@@ -72,32 +73,37 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openSystemFileManager() {
-        packageManager.getLaunchIntentForPackage(DOCUMENTS_UI)?.let {
-            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(it)
-            return
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            component = ComponentName(DOCUMENTS_UI, "$DOCUMENTS_UI.files.FilesActivity")
+            setDataAndType(Uri.parse(PRIMARY_ROOT), DOCUMENT_ROOT_MIME)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        for (root in STORAGE_ROOTS) {
-            val intent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(Uri.parse(root), "vnd.android.document/root")
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            }
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-                return
-            }
+        try {
+            startActivity(intent)
+            return
+        } catch (e: Exception) {
+        }
+
+        val fallback = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(Uri.parse(PRIMARY_ROOT), DOCUMENT_ROOT_MIME)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        if (fallback.resolveActivity(packageManager) != null) {
+            startActivity(fallback)
+            return
         }
         Toast.makeText(this, R.string.file_manager_missing, Toast.LENGTH_SHORT).show()
     }
 
-    private fun openSystemScreen(vararg actions: String) {
-        for (action in actions) {
-            try {
-                startActivity(Intent(action).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-                return
-            } catch (e: Exception) {
-                continue
-            }
+    private fun openAndroidSettings(action: String) {
+        val intent = Intent(action).apply {
+            setPackage(SETTINGS_PACKAGE)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        try {
+            startActivity(intent)
+            return
+        } catch (e: Exception) {
         }
         Toast.makeText(this, R.string.system_screen_missing, Toast.LENGTH_SHORT).show()
     }
@@ -110,9 +116,8 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val DOCUMENTS_UI = "com.android.documentsui"
-        private val STORAGE_ROOTS = arrayOf(
-            "content://com.android.externalstorage.documents/root/primary",
-            "content://com.android.externalstorage.documents/root/home"
-        )
+        private const val SETTINGS_PACKAGE = "com.android.settings"
+        private const val PRIMARY_ROOT = "content://com.android.externalstorage.documents/root/primary"
+        private const val DOCUMENT_ROOT_MIME = "vnd.android.document/root"
     }
 }
