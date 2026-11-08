@@ -16,9 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.List
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -105,7 +102,10 @@ fun DefaultTopBar(
         scrollBehavior = scrollBehavior,
         actions = {
             IconButton(onClick = onInstallApp) {
-                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.install_app))
+                Icon(
+                    painterResource(R.drawable.ic_archive),
+                    contentDescription = stringResource(R.string.install_app)
+                )
             }
             if (hasItems) {
                 IconButton(onClick = onSearch) {
@@ -113,10 +113,16 @@ fun DefaultTopBar(
                 }
             }
             IconButton(onClick = onFiles) {
-                Icon(Icons.AutoMirrored.Filled.List, contentDescription = stringResource(R.string.file_share))
+                Icon(
+                    painterResource(R.drawable.ic_folder),
+                    contentDescription = stringResource(R.string.file_share)
+                )
             }
             IconButton(onClick = onAppInfo) {
-                Icon(Icons.Default.Info, contentDescription = stringResource(R.string.app_info))
+                Icon(
+                    painterResource(R.drawable.ic_apps),
+                    contentDescription = stringResource(R.string.app_info)
+                )
             }
             Box {
                 IconButton(onClick = { menuExpanded = true }) {
