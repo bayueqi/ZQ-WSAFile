@@ -121,7 +121,8 @@ internal object ApkMerger {
         entry.crc = crc.value
         if (alignment > 1) {
             val position = counting.count
-            var extraLength = (alignment - ((position + 30 + name.toByteArray(Charsets.UTF_8).size) % alignment)) % alignment
+            val nameLength = name.toByteArray(Charsets.UTF_8).size
+            var extraLength = ((alignment - ((position + 30 + nameLength) % alignment)) % alignment).toInt()
             if (extraLength in 1..3) extraLength += alignment
             if (extraLength >= 4) {
                 val extra = ByteArray(extraLength)
