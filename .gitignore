@@ -12,3 +12,5 @@ app/release/
 .kotlin
 gradle/gradle-daemon-jvm.properties
 import-summary.txt
+build-output.log
+build-log.txt
