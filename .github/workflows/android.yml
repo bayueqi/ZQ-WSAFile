@@ -61,6 +61,14 @@ jobs:
           path: out/WSAFile.apk
           if-no-files-found: error
 
+      - name: Publish to release
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view latest > /dev/null 2>&1 || gh release create latest --title "WSAFile" --notes "最新构建，直接下载 WSAFile.apk 安装。"
+          gh release upload latest out/WSAFile.apk --clobber
+
       - name: Publish build log on failure
         if: failure()
         run: |
