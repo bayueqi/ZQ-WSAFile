@@ -318,17 +318,6 @@ class MainService @Inject constructor(
                         targetFile.delete()
                         return false
                     }
-                } else if (apkFiles.size > 1) {
-                    val mergedFile = File(backupsFolder, "$fileName.apk")
-                    if (!ApkMerger.merge(context, apkFiles, mergedFile)) {
-                        mergedFile.delete()
-                        val extension = if (useApkmExtension) ".apkm" else ".zip"
-                        val targetFile = File(backupsFolder, "$fileName$extension")
-                        if (!zipToFile(targetFile, apkFiles)) {
-                            targetFile.delete()
-                            return false
-                        }
-                    }
                 } else {
                     val extension = if (useApkmExtension) ".apkm" else ".zip"
                     val targetFile = File(backupsFolder, "$fileName$extension")
