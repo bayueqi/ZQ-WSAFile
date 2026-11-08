@@ -6,17 +6,19 @@ import com.ryosoftware.utilities.LogUtilities
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.security.KeyStore
+import java.security.KeyFactory
 import java.security.PrivateKey
+import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
+import java.security.spec.PKCS8EncodedKeySpec
 import java.util.zip.CRC32
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
 internal object ApkMerger {
-    private const val KEYSTORE_ASSET = "sign.p12"
-    private const val KEYSTORE_PASSWORD = "wsafile"
+    private const val PRIVATE_KEY_ASSET = "key.der"
+    private const val CERTIFICATE_ASSET = "cert.pem"
     private const val KEY_ALIAS = "wsafile"
     private const val PAGE_ALIGNMENT = 4096
     private const val RESOURCES_ALIGNMENT = 4
@@ -141,10 +143,11 @@ internal object ApkMerger {
     }
 
     private fun sign(context: Context, input: File, output: File) {
-        val keyStore = KeyStore.getInstance("PKCS12")
-        context.assets.open(KEYSTORE_ASSET).use { keyStore.load(it, KEYSTORE_PASSWORD.toCharArray()) }
-        val privateKey = keyStore.getKey(KEY_ALIAS, KEYSTORE_PASSWORD.toCharArray()) as PrivateKey
-        val certificate = keyStore.getCertificate(KEY_ALIAS) as X509Certificate
+        val keyBytes = context.assets.open(PRIVATE_KEY_ASSET).use { it.readBytes() }
+        val privateKey = KeyFactory.getInstance("RSA").generatePrivate(PKCS8EncodedKeySpec(keyBytes))
+        val certificate = context.assets.open(CERTIFICATE_ASSET).use {
+            CertificateFactory.getInstance("X.509").generateCertificate(it) as X509Certificate
+        }
         val signerConfig = ApkSigner.SignerConfig.Builder(KEY_ALIAS, privateKey, listOf(certificate)).build()
         ApkSigner.Builder(listOf(signerConfig))
             .setInputApk(input)
