@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <string name="auto_apps_backup_none">没有需要备份的应用</string>
+
+    <plurals name="auto_apps_backup_ended_without_error">
+        <item quantity="one">已创建 %2$s 的备份</item>
+        <item quantity="other">已创建 %2$s 的备份</item>
+    </plurals>
+
+    <plurals name="auto_apps_backup_ended_with_error">
+        <item quantity="one">已创建 %2$s 的备份，但处理其它应用时出错</item>
+        <item quantity="other">已创建 %2$s 的备份，但处理其它应用时出错</item>
+    </plurals>
+
+    <plurals name="count_apks">
+        <item quantity="one">%1$d 个 APK（%2$s）</item>
+        <item quantity="other">%1$d 个 APK（%2$s）</item>
+    </plurals>
+
+    <plurals name="count_apks_extended">
+        <item quantity="one">应用含 %1$d 个 APK，占用约 %2$s 空间</item>
+        <item quantity="other">应用含 %1$d 个 APK，占用约 %2$s 空间</item>
+    </plurals>
+
+    <plurals name="count_apks_extended_with_data_size">
+        <item quantity="one">应用含 %1$d 个 APK，占用约 %2$s 空间（连同应用数据在内共约 %3$s）</item>
+        <item quantity="other">应用含 %1$d 个 APK，占用约 %2$s 空间（连同应用数据在内共约 %3$s）</item>
+    </plurals>
+
+    <plurals name="save_app_package">
+        <item quantity="one">保存 APK 到本地</item>
+        <item quantity="other">保存 %1$d 个 APK 到本地</item>
+    </plurals>
+
+    <plurals name="share_app_package">
+        <item quantity="one">分享 APK</item>
+        <item quantity="other">分享 %1$d 个 APK</item>
+    </plurals>
+
+</resources>

@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+
+    <string name="app_name">APK 导出器</string>
+
+    <string name="background_tasks">后台任务</string>
+    <string name="auto_created_backups">自动创建的备份</string>
+    <string name="auto_created_backups_error">备份时出错</string>
+    <string name="auto_created_backups_none">没有需要备份的应用</string>
+
+    <string name="settings">设置</string>
+
+    <string name="apps_list">应用列表</string>
+
+    <string name="show_system_apps">显示系统应用</string>
+    <string name="show_system_apps_on">列表将同时显示系统应用和用户应用</string>
+    <string name="show_system_apps_off">列表仅显示用户应用（若已启用自动备份，开启了自动备份的应用始终显示）</string>
+
+    <string name="show_system_apps_only_if_updated">系统应用仅在更新后显示</string>
+    <string name="show_system_apps_only_if_updated_on">只有被更新过的系统应用才会显示</string>
+    <string name="show_system_apps_only_if_updated_off">系统应用一律显示，即使从未更新</string>
+
+    <string name="sort_updated_apps_first">最近更新的应用优先</string>
+    <string name="sort_updated_apps_first_on">按名称排序，但最近更新过的应用排在前面</string>
+    <string name="sort_updated_apps_first_off">仅按名称排序</string>
+
+    <string name="show_disabled_apps">显示已停用的应用</string>
+    <string name="show_disabled_apps_on">已停用的应用会出现在列表中，也会参与自动备份</string>
+    <string name="show_disabled_apps_off">已停用的应用不出现在列表中，也不参与自动备份</string>
+
+    <string name="storage">存储</string>
+
+    <string name="save_folder">保存目录</string>
+    <string name="save_folder_not_set">点击选择备份文件的存放目录</string>
+
+    <string name="backup_format">备份文件格式</string>
+
+    <string name="use_app_label">使用应用名称</string>
+    <string name="use_app_label_on">用应用名称（去掉空格）而不是包名来生成备份文件名</string>
+    <string name="use_app_label_off">@string/use_app_label_on</string>
+
+    <string name="use_long_version_number">使用版本号</string>
+    <string name="use_long_version_number_on">使用应用的长版本号，通常由多段数字和字母组成，同一应用相邻版本之间可能不变；短版本号是一个整数，每次发布唯一</string>
+    <string name="use_long_version_number_off">@string/use_long_version_number_on</string>
+
+    <string name="save_as_zip_file">保存为压缩包</string>
+    <string name="save_as_zip_file_on">把包含多个 APK 的应用保存（并分享）为单个压缩包；文件以应用名和版本命名</string>
+    <string name="save_as_zip_file_off">把包含多个 APK 的应用保存（并分享）为多个文件；用应用名建目录、版本号建子目录</string>
+
+    <string name="do_not_compress_single_files">不强制压缩</string>
+    <string name="do_not_compress_single_files_on">只含一个文件的备份不做压缩</string>
+    <string name="do_not_compress_single_files_off">所有备份都压缩，包括只含一个文件的</string>
+
+    <string name="apkm_extension">使用 .apkm 扩展名</string>
+    <string name="apkm_extension_on">压缩备份使用 .apkm 扩展名，而不是 .zip</string>
+    <string name="apkm_extension_off">压缩备份使用 .zip 扩展名</string>
+
+    <string name="automation">自动化</string>
+
+    <string name="auto_backup_apps">自动备份应用</string>
+    <string name="auto_backup_apps_on">自动保存新安装或已更新应用的 APK。参与的应用由本节选项和每个应用自己的自动备份开关决定。后台进程会定期检查符合条件的应用（若某应用在此期间多次更新，中间的部分版本会丢失）。</string>
+    <string name="auto_backup_apps_off">不自动保存新安装或已更新应用的 APK</string>
+    <string name="can_automatically_backup">自动备份应用</string>
+
+    <string name="auto_enable_new_apps">新安装的应用</string>
+    <string name="auto_enable_new_apps_on">新安装的应用默认开启自动备份</string>
+    <string name="auto_enable_new_apps_off">新安装的应用默认不开启自动备份</string>
+
+    <string name="auto_backup_system_apps">系统应用</string>
+    <string name="auto_backup_system_apps_on">所有系统应用默认开启自动备份</string>
+    <string name="auto_backup_system_apps_off">系统应用默认不开启自动备份</string>
+
+    <string name="force_backup_now">立即执行待办备份</string>
+    <string name="auto_backup_last_date">上次执行时间：%1$s</string>
+    <string name="auto_backup_next_date">下次计划执行时间：%1$s</string>
+    <string name="auto_backup_last_date_format">yyyy/MM/dd HH:mm</string>
+    <string name="force_backup_now_summary">点击立即执行备份</string>
+    <string name="force_backup_running">备份正在进行&#8230;</string>
+
+    <string name="appearance">外观</string>
+
+    <string name="theme">主题</string>
+    <string name="dark_theme">深色</string>
+    <string name="light_theme">浅色</string>
+    <string name="system_theme">跟随系统</string>
+
+    <string name="black_background">纯黑背景</string>
+    <string name="black_background_on">使用纯黑背景</string>
+    <string name="black_background_off">使用系统背景色</string>
+
+    <string name="use_system_accent_color">系统强调色</string>
+    <string name="use_system_accent_color_on">跟随系统强调色</string>
+    <string name="use_system_accent_color_off">使用应用自带的强调色</string>
+
+    <string name="permissions_title">权限</string>
+    <string name="usage_access">使用情况访问权限</string>
+    <string name="usage_access_granted">已授权。应用可以读取使用统计来显示数据大小。</string>
+    <string name="usage_access_not_granted">【可选】授权后除 APK 大小外，还会显示应用数据占用。</string>
+
+    <string name="about">关于</string>
+
+    <string name="github_repo">GitHub 仓库</string>
+    <string name="github_repo_summary">点击查看应用源代码和许可协议。</string>
+
+    <string name="app_version_name">应用版本</string>
+    <string name="app_version_name_and_number">%1$s (%2$d)</string>
+
+    <string name="install_app">安装应用</string>
+    <string name="install_app_description">选择要安装的应用（仅支持 .apk、.zip 和 .apkm 文件）</string>
+
+    <string name="uninstall_app">卸载</string>
+    <string name="uninstall_updates">卸载更新</string>
+    <string name="app_info">应用信息</string>
+    <string name="open_app">打开应用</string>
+
+    <string name="app_detail_info">应用详情</string>
+    <string name="open_system_app_info">在系统设置中查看应用信息</string>
+    <string name="version">版本</string>
+    <string name="requires_android">要求 Android</string>
+    <string name="installed">安装时间</string>
+    <string name="last_updated">最后更新</string>
+    <string name="app_storage">存储占用</string>
+    <string name="apks_size">APK</string>
+    <string name="apks_size_extended_value">%1$s（含编译产物和系统文件共 %2$s）</string>
+    <string name="data_size">数据</string>
+    <string name="cache_size">缓存</string>
+
+    <string name="apk_files">APK 文件</string>
+    <string name="base_apk">基础 APK</string>
+    <string name="split_apk">分片 APK %1$d</string>
+    <string name="total_size">合计：%1$s</string>
+    <string name="permissions">权限</string>
+    <string name="signatures">签名</string>
+    <string name="signer_single">签名者</string>
+    <string name="manifest_components">清单组件</string>
+    <string name="activities">Activity</string>
+    <string name="services">Service</string>
+    <string name="receivers">Receiver</string>
+    <string name="providers">Provider</string>
+
+    <string name="checking_if_recently_installed_or_updated_apps">正在检查有无刚刚安装或更新的应用</string>
+
+    <string name="error_performing_auto_apps_backup">为最近安装或更新的应用创建备份时发生崩溃</string>
+
+    <string name="cant_complete_requested_operation">无法完成所请求的操作</string>
+    <string name="install_success">应用已安装！</string>
+    <string name="operation_done">操作已完成！</string>
+
+    <string name="select_all">全选</string>
+    <string name="select_none">取消全选</string>
+    <string name="backup_on">备份 开</string>
+    <string name="backup_off">备份 关</string>
+    <string name="save_selected">保存所选</string>
+    <string name="done">完成</string>
+
+    <string name="no_apps">没有应用</string>
+
+    <string name="accept_button">确定</string>
+    <string name="cancel_button">取消</string>
+
+    <string name="search">搜索</string>
+
+    <string name="loading">加载中</string>
+    <string name="saving">保存中</string>
+    <string name="installing">安装中</string>
+
+    <string name="do_not_show_anymore">不再显示</string>
+
+    <string name="strings_middle_separator">、</string>
+    <string name="strings_and_separator">和</string>
+
+    <string name="selected_count">已选 %d 项</string>
+
+    <string name="badge_app_recently_updated">最近更新</string>
+    <string name="badge_system_app">系统应用</string>
+    <string name="badge_disabled_app">已停用</string>
+    <string name="badge_autobackup_off">未开自动备份</string>
+
+    <string name="size_in_kb">%1$.1f KB</string>
+    <string name="size_in_mb">%1$.1f MB</string>
+    <string name="size_in_gb">%1$.2f GB</string>
+
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    <string name="system_app">系统应用</string>
+    <string name="user_app">用户应用</string>
+    <string name="view_in_play_store">在 Play 商店中查看</string>
+    <string name="special_permissions">特殊权限</string>
+    <string name="accessibility">无障碍</string>
+    <string name="notification_listener">通知读取</string>
+    <string name="device_admin">设备管理</string>
+    <string name="overlay">悬浮窗</string>
+    <string name="write_settings">修改系统设置</string>
+    <string name="install_unknown_apps">安装未知应用</string>
+    <string name="manage_all_files">管理所有文件</string>
+    <string name="install_source">安装来源</string>
+    <string name="backup_warning_title">设置已更改</string>
+    <string name="backup_warning_message">你开启了自动备份，或修改了影响自动备份范围的设置。这可能会导致大量应用被意外备份。是否把所有当前应用都标记为已备份？</string>
+    <string name="backup_warning_skip">是，跳过备份</string>
+    <string name="backup_warning_continue">否，继续</string>
+    <string name="backup_warning_continue_editing">继续编辑</string>
+
+    <string name="battery_optimization_dialog_title">关闭电池优化</string>
+    <string name="battery_optimization_dialog_message">为了让自动备份即使在设备休眠时也能准时执行，必须为本应用关闭电池优化。\n\n这不会明显影响设备的续航。</string>
+
+    <string name="file_share">文件管理</string>
+    <string name="file_share_running">服务运行中</string>
+    <string name="file_share_stopped">服务已停止</string>
+    <string name="file_share_stop_service">停止服务</string>
+    <string name="file_share_address">访问地址</string>
+    <string name="file_share_open_in_browser">在浏览器中打开</string>
+    <string name="file_share_copy_address">复制地址</string>
+    <string name="file_share_grant_storage">授予所有文件访问权限</string>
+    <string name="file_share_storage_granted">已获得所有文件访问权限</string>
+    <string name="file_share_storage_missing">未获得所有文件访问权限，只能浏览应用自己的目录</string>
+    <string name="file_share_start_failed">服务启动失败，换一个端口重试</string>
+
+</resources>
