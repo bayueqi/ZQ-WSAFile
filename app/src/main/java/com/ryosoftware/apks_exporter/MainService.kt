@@ -235,7 +235,8 @@ class MainService @Inject constructor(
 
     private fun backupFolder(): File? {
         val shared = File("/sdcard/Windows")
-        val folder = if (shared.isDirectory) File(shared, "APK") else File("/sdcard/Download/APK")
+        val sharedReady = File(shared, "AppData").isDirectory || File(shared, "Desktop").isDirectory
+        val folder = if (sharedReady) File(shared, "APK") else File("/sdcard/Download/APK")
         try {
             if (!folder.exists() && !folder.mkdirs()) return null
         } catch (e: Exception) {
