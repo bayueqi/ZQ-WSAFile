@@ -37,9 +37,7 @@ class MainActivity : AppCompatActivity() {
                             onNavigateToFiles = { openSystemFileManager() },
                             onNavigateToAppInfo = { openAndroidSettings(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS) },
                             onNavigateToSystemSettings = { openAndroidSettings(Settings.ACTION_SETTINGS) },
-                            onNavigateToDeveloperOptions = {
-                                openAndroidSettings(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
-                            },
+                            onNavigateToDeveloperOptions = { openDeveloperOptions() },
                             onNavigateToAppDetail = { packageName ->
                                 navController.navigate("app_detail/$packageName")
                             }
@@ -98,6 +96,19 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, R.string.file_manager_missing, Toast.LENGTH_SHORT).show()
     }
 
+    private fun openDeveloperOptions() {
+        val direct = Intent().apply {
+            component = ComponentName(SETTINGS_PACKAGE, DEVELOPER_SETTINGS_ACTIVITY)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        try {
+            startActivity(direct)
+            return
+        } catch (e: Exception) {
+        }
+        openAndroidSettings(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+    }
+
     private fun openAndroidSettings(action: String) {
         val intent = Intent(action).apply {
             setPackage(SETTINGS_PACKAGE)
@@ -120,6 +131,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val DOCUMENTS_UI = "com.android.documentsui"
         private const val SETTINGS_PACKAGE = "com.android.settings"
+        private const val DEVELOPER_SETTINGS_ACTIVITY =
+            "com.android.settings.Settings\$DevelopmentSettingsDashboardActivity"
         private const val PRIMARY_ROOT = "content://com.android.externalstorage.documents/root/primary"
         private const val DOCUMENT_ROOT_MIME = "vnd.android.document/root"
     }
