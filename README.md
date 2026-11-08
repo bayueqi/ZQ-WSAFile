@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/icon.png" width="128" alt="ZQ-WSAFile"/>
+  <img src="assets/icon.png" width="128" alt="WSAFile"/>
 
   # WSAFile
 
