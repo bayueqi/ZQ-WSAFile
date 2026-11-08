@@ -11,6 +11,7 @@
 
     <string name="settings">应用设置</string>
     <string name="system_settings">系统设置</string>
+    <string name="developer_options">开发者选项</string>
     <string name="more">更多</string>
     <string name="system_screen_missing">未找到系统设置页面</string>
 

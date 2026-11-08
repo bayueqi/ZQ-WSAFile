@@ -53,6 +53,7 @@ fun MainScreen(
     onNavigateToFiles: () -> Unit = {},
     onNavigateToAppInfo: () -> Unit = {},
     onNavigateToSystemSettings: () -> Unit = {},
+    onNavigateToDeveloperOptions: () -> Unit = {},
     onNavigateToAppDetail: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -208,6 +209,7 @@ fun MainScreen(
                     onFiles = onNavigateToFiles,
                     onAppInfo = onNavigateToAppInfo,
                     onSystemSettings = onNavigateToSystemSettings,
+                    onDeveloperOptions = onNavigateToDeveloperOptions,
                     onInstallApp = {
                         val doNotShow = ApplicationPreferences.get(
                             DO_NOT_SHOW_INSTALL_APP_FILE_PICKER_DESCRIPTION_KEY, false

@@ -82,6 +82,7 @@ fun DefaultTopBar(
     onFiles: () -> Unit,
     onAppInfo: () -> Unit,
     onSystemSettings: () -> Unit,
+    onDeveloperOptions: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     hasItems: Boolean
 ) {
@@ -137,6 +138,13 @@ fun DefaultTopBar(
                         onClick = {
                             menuExpanded = false
                             onSystemSettings()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.developer_options)) },
+                        onClick = {
+                            menuExpanded = false
+                            onDeveloperOptions()
                         }
                     )
                     DropdownMenuItem(

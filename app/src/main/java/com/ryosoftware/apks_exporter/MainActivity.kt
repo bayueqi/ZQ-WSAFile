@@ -37,6 +37,9 @@ class MainActivity : AppCompatActivity() {
                             onNavigateToFiles = { openSystemFileManager() },
                             onNavigateToAppInfo = { openAndroidSettings(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS) },
                             onNavigateToSystemSettings = { openAndroidSettings(Settings.ACTION_SETTINGS) },
+                            onNavigateToDeveloperOptions = {
+                                openAndroidSettings(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+                            },
                             onNavigateToAppDetail = { packageName ->
                                 navController.navigate("app_detail/$packageName")
                             }
