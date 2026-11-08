@@ -97,16 +97,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDeveloperOptions() {
-        val direct = Intent().apply {
+        val wsaSettings = Intent(WSA_SETTINGS_ACTION).apply {
+            component = ComponentName(WSA_BRIDGE_PACKAGE, WSA_SETTINGS_HANDLER)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        if (startSettings(wsaSettings)) return
+
+        val developmentPage = Intent().apply {
             component = ComponentName(SETTINGS_PACKAGE, DEVELOPER_SETTINGS_ACTIVITY)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
-        try {
-            startActivity(direct)
-            return
-        } catch (e: Exception) {
-        }
+        if (startSettings(developmentPage)) return
+
         openAndroidSettings(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+    }
+
+    private fun startSettings(intent: Intent): Boolean = try {
+        startActivity(intent)
+        true
+    } catch (e: Exception) {
+        false
     }
 
     private fun openAndroidSettings(action: String) {
@@ -131,6 +141,9 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val DOCUMENTS_UI = "com.android.documentsui"
         private const val SETTINGS_PACKAGE = "com.android.settings"
+        private const val WSA_BRIDGE_PACKAGE = "com.microsoft.windows.userapp"
+        private const val WSA_SETTINGS_HANDLER = "com.microsoft.windows.intents.SubsystemIntentHandler"
+        private const val WSA_SETTINGS_ACTION = "com.microsoft.windows.SUBSYSTEM_SETTINGS"
         private const val DEVELOPER_SETTINGS_ACTIVITY =
             "com.android.settings.Settings\$DevelopmentSettingsDashboardActivity"
         private const val PRIMARY_ROOT = "content://com.android.externalstorage.documents/root/primary"
