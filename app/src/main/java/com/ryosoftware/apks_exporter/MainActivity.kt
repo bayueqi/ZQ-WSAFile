@@ -3,6 +3,7 @@ package com.ryosoftware.apks_exporter
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.activity.OnBackPressedCallback
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
                             viewModel = viewModel,
                             onNavigateToSettings = { navController.navigate("preferences") },
                             onNavigateToFiles = { openSystemFileManager() },
+                            onNavigateToAppInfo = { openSystemScreen(Settings.ACTION_MANAGE_APPLICATIONS_SETTINGS, Settings.ACTION_APPLICATION_SETTINGS) },
+                            onNavigateToSystemSettings = { openSystemScreen(Settings.ACTION_SETTINGS) },
                             onNavigateToAppDetail = { packageName ->
                                 navController.navigate("app_detail/$packageName")
                             }
@@ -85,6 +88,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
         Toast.makeText(this, R.string.file_manager_missing, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun openSystemScreen(vararg actions: String) {
+        for (action in actions) {
+            try {
+                startActivity(Intent(action).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                return
+            } catch (e: Exception) {
+                continue
+            }
+        }
+        Toast.makeText(this, R.string.system_screen_missing, Toast.LENGTH_SHORT).show()
     }
 
     override fun onResume() {

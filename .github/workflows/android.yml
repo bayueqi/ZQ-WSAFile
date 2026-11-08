@@ -51,14 +51,14 @@ jobs:
         if: success()
         run: |
           mkdir -p out
-          cp app/build/outputs/apk/debug/app-debug.apk out/ZQ-WSAFile-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk out/WSAFile.apk
 
       - name: Upload APK
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: ZQ-WSAFile-debug
-          path: out/ZQ-WSAFile-debug.apk
+          name: WSAFile
+          path: out/WSAFile.apk
           if-no-files-found: error
 
       - name: Publish build log on failure

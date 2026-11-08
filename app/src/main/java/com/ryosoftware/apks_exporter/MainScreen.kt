@@ -50,6 +50,8 @@ fun MainScreen(
     viewModel: MainViewModel = viewModel(),
     onNavigateToSettings: () -> Unit,
     onNavigateToFiles: () -> Unit = {},
+    onNavigateToAppInfo: () -> Unit = {},
+    onNavigateToSystemSettings: () -> Unit = {},
     onNavigateToAppDetail: (String) -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -215,6 +217,8 @@ fun MainScreen(
                     onSearch = { viewModel.startSearch() },
                     onSettings = onNavigateToSettings,
                     onFiles = onNavigateToFiles,
+                    onAppInfo = onNavigateToAppInfo,
+                    onSystemSettings = onNavigateToSystemSettings,
                     onInstallApp = {
                         val doNotShow = ApplicationPreferences.get(
                             DO_NOT_SHOW_INSTALL_APP_FILE_PICKER_DESCRIPTION_KEY, false

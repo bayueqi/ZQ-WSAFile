@@ -16,6 +16,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ZQ-WSAFile"
+rootProject.name = "WSAFile"
 
 include ':app'

@@ -18,6 +18,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
@@ -81,9 +83,13 @@ fun DefaultTopBar(
     onSettings: () -> Unit,
     onInstallApp: () -> Unit,
     onFiles: () -> Unit,
+    onAppInfo: () -> Unit,
+    onSystemSettings: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior,
     hasItems: Boolean
 ) {
+    var menuExpanded by remember { mutableStateOf(false) }
+
     TopAppBar(
         title = {
             Text(
@@ -109,8 +115,32 @@ fun DefaultTopBar(
             IconButton(onClick = onFiles) {
                 Icon(Icons.AutoMirrored.Filled.List, contentDescription = stringResource(R.string.file_share))
             }
-            IconButton(onClick = onSettings) {
-                Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.settings))
+            IconButton(onClick = onAppInfo) {
+                Icon(Icons.Default.Info, contentDescription = stringResource(R.string.app_info))
+            }
+            Box {
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.more))
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false }
+                ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.system_settings)) },
+                        onClick = {
+                            menuExpanded = false
+                            onSystemSettings()
+                        }
+                    )
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.settings)) },
+                        onClick = {
+                            menuExpanded = false
+                            onSettings()
+                        }
+                    )
+                }
             }
         }
     )

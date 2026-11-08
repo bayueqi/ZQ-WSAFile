@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/icon.png" width="128" alt="ZQ-WSAFile"/>
 
-  # ZQ-WSAFile
+  # WSAFile
 
   **导出已安装应用的 APK，并调用系统文件管理**
 </div>
@@ -18,7 +18,7 @@
 
 ## 安装
 
-从 Actions 构建产物或 Releases 下载 `ZQ-WSAFile-debug.apk`，安装即可。
+从 Actions 构建产物或 Releases 下载 `WSAFile.apk`，安装即可。
 
 要求 Android 13（API 33）及以上。
 
@@ -30,7 +30,7 @@
 
 ## 编译
 
-仓库已配置 GitHub Actions，推送到 `main` 分支即自动构建，产物为 `ZQ-WSAFile-debug`。
+仓库已配置 GitHub Actions，推送到 `main` 分支即自动构建，产物为 `WSAFile`。
 
 本地构建：
 

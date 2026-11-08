@@ -2,14 +2,18 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
 
-    <string name="app_name">APK 导出器</string>
+    <string name="app_name">WSAFile</string>
 
     <string name="background_tasks">后台任务</string>
     <string name="auto_created_backups">自动创建的备份</string>
     <string name="auto_created_backups_error">备份时出错</string>
     <string name="auto_created_backups_none">没有需要备份的应用</string>
 
-    <string name="settings">设置</string>
+    <string name="settings">应用设置</string>
+    <string name="system_settings">系统设置</string>
+    <string name="app_info">应用信息</string>
+    <string name="more">更多</string>
+    <string name="system_screen_missing">未找到系统设置页面</string>
 
     <string name="apps_list">应用列表</string>
 
