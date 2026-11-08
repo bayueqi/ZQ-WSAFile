@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Environment
 import android.provider.Settings
 import android.widget.Toast
 import androidx.core.net.toUri
@@ -72,6 +73,7 @@ fun MainScreen(
     var isSaving by remember { mutableStateOf(false) }
     var isInstalling by remember { mutableStateOf(false) }
     var pendingInstallUri by remember { mutableStateOf<Uri?>(null) }
+    var pendingSaveItems by remember { mutableStateOf<List<AppItem>?>(null) }
 
     val autoBackupEnabled = ApplicationPreferences.get(
         ApplicationPreferences.AUTO_BACKUP_APPS_KEY,
@@ -120,41 +122,28 @@ fun MainScreen(
         }
     }
 
-    val folderPickerLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocumentTree()
-    ) { uri ->
-        if (uri != null) {
-            activity.contentResolver.takePersistableUriPermission(
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-            scope.launch {
-                ApplicationPreferences.putSuspend(ApplicationPreferences.SAVE_FOLDER_KEY, uri.toString())
-                onFolderSelectedCallback?.invoke(uri)
-                onFolderSelectedCallback = null
-            }
-        } else {
-            onFolderSelectedCallback = null
+    val storagePermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val items = pendingSaveItems
+        pendingSaveItems = null
+        if ((items != null) && Environment.isExternalStorageManager()) {
+            isSaving = true
+            doSaveApps(activity, items, viewModel, scope) { isSaving = false }
         }
-    }
-
-    fun launchFolderPicker(uri: Uri?, onFolderSelected: (Uri) -> Unit) {
-        onFolderSelectedCallback = onFolderSelected
-        folderPickerLauncher.launch(uri)
     }
 
     fun requestSaveApps(items: List<AppItem>) {
-        val folder = ApplicationPreferences.get<String?>(ApplicationPreferences.SAVE_FOLDER_KEY, null)
-        val folderUri = folder?.toUri()
-        if ((folderUri != null) && (DocumentFile.fromTreeUri(activity, folderUri)?.canWrite() == true)) {
-            isSaving = true
-                doSaveApps(activity, items, viewModel, scope) { isSaving = false }
-        } else {
-            launchFolderPicker(folderUri) { _ ->
-                isSaving = true
-            doSaveApps(activity, items, viewModel, scope) { isSaving = false }
-            }
+        if (!Environment.isExternalStorageManager()) {
+            pendingSaveItems = items
+            storagePermissionLauncher.launch(
+                Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                    .setPackage("com.android.settings")
+            )
+            return
         }
+        isSaving = true
+        doSaveApps(activity, items, viewModel, scope) { isSaving = false }
     }
 
     DisposableEffect(context) {
@@ -523,7 +512,7 @@ private fun doSaveApps(
             onFinish()
             Toast.makeText(
                 activity,
-                if (success) R.string.operation_done else R.string.cant_complete_requested_operation,
+                if (success) R.string.saved_to_folder else R.string.cant_complete_requested_operation,
                 Toast.LENGTH_LONG
             ).show()
             viewModel.loadData()

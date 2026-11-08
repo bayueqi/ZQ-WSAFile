@@ -233,10 +233,136 @@ class MainService @Inject constructor(
         }
     }
 
-    suspend fun doBackup(context: Context, packageInfo: PackageInfo): Boolean {
+    private fun backupFolder(): File? {
+        val shared = File("/sdcard/Windows")
+        val folder = if (shared.isDirectory) File(shared, "APK") else File("/sdcard/Download/APK")
         try {
-            val backupsFolder = ApplicationPreferences.get<String?>(ApplicationPreferences.SAVE_FOLDER_KEY, null)
-                ?: return false
+            if (!folder.exists() && !folder.mkdirs()) return null
+        } catch (e: Exception) {
+            return null
+        }
+        return if (folder.isDirectory && folder.canWrite()) folder else null
+    }
+
+    private fun copyToFile(source: File, target: File): Boolean {
+        return try {
+            source.inputStream().use { input ->
+                target.outputStream().use { output -> input.copyTo(output) }
+            }
+            true
+        } catch (e: Exception) {
+            LogUtilities.show(MainService::class.java, e)
+            false
+        }
+    }
+
+    private fun zipToFile(target: File, apkFiles: Map<String, File>): Boolean {
+        return try {
+            target.outputStream().use { outputStream ->
+                ZipFileUtilities.createZip(outputStream, apkFiles, false)
+            }
+        } catch (e: Exception) {
+            LogUtilities.show(MainService::class.java, e)
+            false
+        }
+    }
+
+    private suspend fun doBackupToFolder(context: Context, packageInfo: PackageInfo): Boolean {
+        try {
+            val backupsFolder = backupFolder() ?: return false
+
+            val saveAsZipFile = ApplicationPreferences.get(
+                ApplicationPreferences.SAVE_AS_ZIP_FILE_KEY,
+                ApplicationPreferences.SAVE_AS_ZIP_FILE_DEFAULT
+            )
+            val doNotCompressSingleFiles = ApplicationPreferences.get(
+                ApplicationPreferences.DO_NOT_COMPRESS_SINGLE_FILES_KEY,
+                ApplicationPreferences.DO_NOT_COMPRESS_SINGLE_FILES_DEFAULT
+            )
+            val useApkmExtension = ApplicationPreferences.get(
+                ApplicationPreferences.APKM_EXTENSION_KEY,
+                ApplicationPreferences.APKM_EXTENSION_DEFAULT
+            )
+            val useVersionLabel = ApplicationPreferences.get(
+                ApplicationPreferences.USE_APP_LABEL_KEY,
+                ApplicationPreferences.USE_APP_LABEL_DEFAULT
+            )
+            val useLongVersionNumber = ApplicationPreferences.get(
+                ApplicationPreferences.USE_LONG_VERSION_NUMBER_KEY,
+                ApplicationPreferences.USE_LONG_VERSION_NUMBER_DEFAULT
+            )
+
+            val appVersionNumber = if (useLongVersionNumber) {
+                packageInfo.versionName ?: packageInfo.longVersionCode.toString()
+            } else {
+                packageInfo.longVersionCode.toString()
+            }
+            val appName = if (useVersionLabel) {
+                PackageManagerUtilities.getApplicationLabel(
+                    context,
+                    packageInfo.packageName,
+                    packageInfo.packageName
+                ).replace("\\s".toRegex(), "")
+            } else {
+                packageInfo.packageName
+            }
+
+            val apkFiles = getApks(context, packageInfo.packageName) ?: return false
+
+            if (saveAsZipFile) {
+                var fileName = "$appName-$appVersionNumber"
+                if (apkFiles.size == 1 && doNotCompressSingleFiles) {
+                    val targetFile = File(backupsFolder, "$fileName.apk")
+                    if (!copyToFile(apkFiles.values.iterator().next(), targetFile)) {
+                        targetFile.delete()
+                        return false
+                    }
+                } else {
+                    val extension = if (useApkmExtension) ".apkm" else ".zip"
+                    val targetFile = File(backupsFolder, "$fileName$extension")
+                    if (!zipToFile(targetFile, apkFiles)) {
+                        targetFile.delete()
+                        return false
+                    }
+                }
+            } else {
+                val appFolder = File(backupsFolder, appName)
+                val versionFolder = File(appFolder, appVersionNumber)
+                if (!versionFolder.isDirectory && !versionFolder.mkdirs()) return false
+                versionFolder.listFiles()?.forEach { it.delete() }
+                var success = true
+                for ((fileName, file) in apkFiles) {
+                    if (!copyToFile(file, File(versionFolder, fileName))) {
+                        success = false
+                        break
+                    }
+                }
+                if (!success) {
+                    versionFolder.listFiles()?.forEach { it.delete() }
+                    versionFolder.delete()
+                    if (appFolder.listFiles()?.isEmpty() != false) appFolder.delete()
+                    return false
+                }
+            }
+            setBackupDone(packageInfo)
+            setAppUpdated(packageInfo)
+            return true
+        } catch (e: Exception) {
+            LogUtilities.show(MainService::class.java, e)
+            return false
+        }
+    }
+
+    suspend fun doBackup(context: Context, packageInfo: PackageInfo): Boolean {
+        val folderPreference = ApplicationPreferences.get<String?>(
+            ApplicationPreferences.SAVE_FOLDER_KEY,
+            null
+        )
+        if (folderPreference == null || !folderPreference.startsWith("content:")) {
+            return doBackupToFolder(context, packageInfo)
+        }
+        try {
+            val backupsFolder = folderPreference
             val backupsFolderDocument = DocumentFile.fromTreeUri(context, backupsFolder.toUri())
                 ?: return false
             if (!backupsFolderDocument.canWrite()) return false

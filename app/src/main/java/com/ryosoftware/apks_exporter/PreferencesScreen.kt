@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
+import android.os.Environment
 import android.os.Process
 import android.provider.Settings
 import android.os.PowerManager
@@ -83,10 +84,7 @@ fun PreferencesScreen(onNavigateBack: () -> Unit) {
         ApplicationPreferences.SORT_UPDATED_APPS_FIRST_KEY,
         ApplicationPreferences.SORT_UPDATED_APPS_FIRST_DEFAULT
     ).collectAsStateWithLifecycle(initialValue = ApplicationPreferences.SORT_UPDATED_APPS_FIRST_DEFAULT)
-    val saveFolderUriFlow by ApplicationPreferences.observe<String?>(
-        ApplicationPreferences.SAVE_FOLDER_KEY, null
-    ).collectAsStateWithLifecycle(initialValue = null)
-    val saveFolderName = saveFolderUriFlow?.let { DocumentFile.fromTreeUri(context, it.toUri())?.name }
+    val saveFolderName = context.getString(R.string.save_folder_default_value)
     val autoBackupAppsFlow by ApplicationPreferences.observe(
         ApplicationPreferences.AUTO_BACKUP_APPS_KEY,
         ApplicationPreferences.AUTO_BACKUP_APPS_DEFAULT
@@ -264,25 +262,20 @@ fun PreferencesScreen(onNavigateBack: () -> Unit) {
         )
     }
 
-    var folderPickerLauncherOnSuccessCallback: ((uri: Uri) -> Unit)? = null
-    val folderPickerLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.OpenDocumentTree()
-    ) { uri ->
-        if (uri != null) {
-            context.contentResolver.takePersistableUriPermission(
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-            )
-            ApplicationPreferences.put(ApplicationPreferences.SAVE_FOLDER_KEY, uri.toString())
-            folderPickerLauncherOnSuccessCallback?.invoke(uri)
-        }
-    }
-    fun launchFolderPicker(
-        uri: Uri?,
-        onFolderSelected: ((uri: Uri) -> Unit)? = null
+    var storagePermissionCallback by remember { mutableStateOf<(() -> Unit)?>(null) }
+    val storagePermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
     ) {
-        folderPickerLauncherOnSuccessCallback = onFolderSelected
-        folderPickerLauncher.launch(uri)
+        val callback = storagePermissionCallback
+        storagePermissionCallback = null
+        if (Environment.isExternalStorageManager()) callback?.invoke()
+    }
+    fun launchFolderPicker(onFolderSelected: (() -> Unit)? = null) {
+        storagePermissionCallback = onFolderSelected
+        storagePermissionLauncher.launch(
+            Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+                .setPackage("com.android.settings")
+        )
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -294,14 +287,11 @@ fun PreferencesScreen(onNavigateBack: () -> Unit) {
     ) { }
 
     @SuppressLint("BatteryLife")
-    fun setAutoBackupApps(newValue: Boolean, uri: Uri? = null) {
+    fun setAutoBackupApps(newValue: Boolean) {
         autoBackupApps = newValue
-        val hasFolder = ((uri != null) || (saveFolderUriFlow != null))
 
-        if (newValue && (!hasFolder)) {
-            launchFolderPicker(null) { uri ->
-                setAutoBackupApps(true, uri)
-            }
+        if (newValue && !Environment.isExternalStorageManager()) {
+            launchFolderPicker { setAutoBackupApps(true) }
             return
         }
         ApplicationPreferences.put(ApplicationPreferences.AUTO_BACKUP_APPS_KEY, newValue)
@@ -417,7 +407,7 @@ fun PreferencesScreen(onNavigateBack: () -> Unit) {
                     ClickablePreference(
                         title = stringResource(R.string.save_folder),
                         summary = saveFolderName ?: stringResource(R.string.save_folder_not_set),
-                        onClick = { launchFolderPicker(saveFolderUriFlow?.toUri()) }
+                        onClick = { launchFolderPicker() }
                     )
                 }
             }

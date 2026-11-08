@@ -36,6 +36,7 @@
 
     <string name="save_folder">保存目录</string>
     <string name="save_folder_not_set">点击选择备份文件的存放目录</string>
+    <string name="save_folder_default_value">APK 文件夹</string>
 
     <string name="backup_format">备份文件格式</string>
 
@@ -149,6 +150,7 @@
     <string name="cant_complete_requested_operation">无法完成所请求的操作</string>
     <string name="install_success">应用已安装！</string>
     <string name="operation_done">操作已完成！</string>
+    <string name="saved_to_folder">已保存到 APK 文件夹</string>
 
     <string name="select_all">全选</string>
     <string name="select_none">取消全选</string>
